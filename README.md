@@ -1,4 +1,5 @@
 ### `npm start`
+
 Starts both the React app and Electron window in the development mode.<br>
 
 If you want to run restart just the Electron part then run the 2 processes separately using `npm run react-start` in one terminal and `npm run electron`.

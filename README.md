@@ -2,7 +2,7 @@
 
 Starts both the React app and Electron window in the development mode.<br>
 
-If you want to run restart just the Electron part then run the 2 processes separately using `npm run react-start` in one terminal and `npm run electron`.
+If you want to run restart just the Electron part then run the 2 processes separately using `npm run react-start` in one terminal and `npm run electron` in another terminal.
 
 ### `npm run react-start`
 
@@ -23,4 +23,3 @@ Builds the React app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed.

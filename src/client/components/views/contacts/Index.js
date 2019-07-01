@@ -37,7 +37,7 @@ class ContactsView extends Component {
 		super(props);
 
 		this.state = {
-			userName: "",
+			screenName: "",
 			pubKey: "",
 			addContactDialogOpen: false
 		};
@@ -51,17 +51,17 @@ class ContactsView extends Component {
 	}
 
 	saveContact() {
-		const { userName, pubKey } = this.state;
+		const { screenName, pubKey } = this.state;
 
-		if (!userName || !pubKey) {
+		if (!screenName || !pubKey) {
 			return;
 		}
 
 		contactsStore.addContact(
-			{ userName, pubKey },
+			{ screenName, pubKey },
 			() => {
 				this.closeAddDialog();
-				this.setState({ userName: "", pubKey: "" });
+				this.setState({ screenName: "", pubKey: "" });
 			},
 			error => {
 				console.error(error); //TODO error handling
@@ -74,7 +74,7 @@ class ContactsView extends Component {
 	}
 
 	renderAddDialog() {
-		const { addContactDialogOpen, userName, pubKey } = this.state;
+		const { addContactDialogOpen, screenName, pubKey } = this.state;
 
 		return (
 			<Dialog open={addContactDialogOpen} onClose={this.closeAddDialog}>
@@ -91,8 +91,8 @@ class ContactsView extends Component {
 						label="Name"
 						type="text"
 						fullWidth
-						value={userName}
-						onChange={e => this.setState({ userName: e.target.value })}
+						value={screenName}
+						onChange={e => this.setState({ screenName: e.target.value })}
 					/>
 					<TextField
 						margin="dense"

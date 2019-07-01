@@ -1,6 +1,7 @@
 const electron = require("electron");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
 const filename = "contacts.json";
 
@@ -24,10 +25,14 @@ class ContactsStorage {
 	}
 
 	update(contactObj) {
-		//If userName exists, overwrite it's pubKey
-		const existingIndex = this.contacts
-			.map(c => c.userName)
-			.indexOf(contactObj.userName);
+		//ID is just a hash of the public key
+		contactObj.id = crypto
+			.createHash("sha256")
+			.update(contactObj.pubKey)
+			.digest("hex");
+
+		//Don't end up with duplicate public keys
+		const existingIndex = this.contacts.map(c => c.id).indexOf(contactObj.id);
 
 		if (existingIndex > -1) {
 			this.contacts[existingIndex] = contactObj;
@@ -35,8 +40,9 @@ class ContactsStorage {
 			this.contacts.push(contactObj);
 		}
 
+		//Sort by screen name
 		this.contacts.sort((a, b) =>
-			a.userName > b.userName ? 1 : b.userName > a.userName ? -1 : 0
+			a.screenName > b.screenName ? 1 : b.screenName > a.screenName ? -1 : 0
 		);
 
 		fs.writeFileSync(this.path, JSON.stringify(this.contacts));

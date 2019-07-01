@@ -18,14 +18,14 @@ class Contacts {
   	});
   }
 
-  addContact({ userName, pubKey }, onSuccess = () => {}, onError = () => {}) {
-  	if (!userName || !pubKey) {
+  addContact({ screenName, pubKey }, onSuccess = () => {}, onError = () => {}) {
+  	if (!screenName || !pubKey) {
   		onError("Missing details.");
   		return;
   	}
 
   	ipcRenderer.send("save-contact", {
-  		userName,
+  		screenName,
   		pubKey
   	});
 

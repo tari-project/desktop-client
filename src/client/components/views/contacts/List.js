@@ -34,15 +34,16 @@ class ContactsList extends Component {
 
 		return (
 			<List dense className={classes.list}>
-				{contacts.map(({ userName, pubKey }) => {
-					const initials = userName && userName.length > 0 ? userName[0] : "?";
+				{contacts.map(({ screenName, id }) => {
+					const initials =
+            screenName && screenName.length > 0 ? screenName[0] : "?";
 
 					return (
-						<ListItem key={userName} button>
+						<ListItem key={id} button>
 							<ListItemAvatar>
 								<Avatar className={classes.avatar}>{initials}</Avatar>
 							</ListItemAvatar>
-							<ListItemText primary={userName}/>
+							<ListItemText primary={screenName}/>
 							<ListItemSecondaryAction>
 								<IconButton edge="end" aria-label="Start chat">
 									<MessagesIcon/>

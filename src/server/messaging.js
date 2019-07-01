@@ -23,9 +23,9 @@ const receiveRandomTestMessage = (win, logger) => {
 const init = (win, logger) => {
 	//Listening for messages from the frontend
 	ipcMain.on("send-message", (event, args) => {
-		const { text } = args;
+		const { text, pubKey } = args;
 
-		logger.info(`Send message: ${text}`);
+		logger.info(`Send message "${text}" to pubKey "${pubKey}"`);
 
 		//TODO implement actual sending here
 		setTimeout(() => {

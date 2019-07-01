@@ -11,7 +11,9 @@ import Container from "../common/Container";
 import NotFound from "../common/NotFound";
 
 //import HomeView from "../views/home/Index";
-import MessagesView from "../views/messages/Index";
+import ChatView from "../views/messages/chat/Index";
+
+import MessagesList from "../views/messages/Index";
 import ContactsView from "../views/contacts/Index";
 import DebugView from "../views/debug/Index";
 
@@ -25,12 +27,9 @@ class Routes extends Component {
 			<Router>
 				<Container>
 					<Switch>
-						<Route
-							exact
-							path="/"
-							component={() => <Redirect to="/messages"/>}
-						/>
-						<Route exact path="/messages" component={MessagesView}/>
+						<Route exact path="/" component={() => <Redirect to="/messages"/>}/>
+						<Route exact path="/messages" component={MessagesList}/>
+						<Route exact path={`/messages/:id`} component={ChatView}/>
 						<Route exact path="/contacts" component={ContactsView}/>
 
 						<Route exact path="/debug" component={DebugView}/>

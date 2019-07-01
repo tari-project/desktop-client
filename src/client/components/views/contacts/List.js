@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
+import { Link } from "react-router-dom";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -45,9 +46,11 @@ class ContactsList extends Component {
 							</ListItemAvatar>
 							<ListItemText primary={screenName}/>
 							<ListItemSecondaryAction>
-								<IconButton edge="end" aria-label="Start chat">
-									<MessagesIcon/>
-								</IconButton>
+								<Link to={`/messages/${id}`}>
+									<IconButton edge="end" aria-label="Start chat">
+										<MessagesIcon/>
+									</IconButton>
+								</Link>
 							</ListItemSecondaryAction>
 						</ListItem>
 					);

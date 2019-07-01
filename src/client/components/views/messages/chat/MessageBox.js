@@ -75,8 +75,6 @@ class MessageBox extends Component {
 		const list = document.getElementById("message-list");
 		if (list) {
 			const scrollTop = list.scrollHeight - list.clientHeight;
-			console.log("Auto scroll: ", scrollTop);
-
 			list.scrollTop = scrollTop;
 		}
 	}

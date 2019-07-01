@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 
 import contactsStore from "../../../stores/contacts";
 import ContactsList from "./List";
+import BreadCrumbs from "../../common/BreadCrumbs";
 
 const styles = theme => {
 	return {
@@ -118,21 +119,24 @@ class ContactsView extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Provider contactsStore={contactsStore}>
-				<div className={classes.root}>
-					{this.renderAddDialog()}
-					<ContactsList/>
+			<React.Fragment>
+				<BreadCrumbs crumbs={[{ label: "Contacts" }]}/>
+				<Provider contactsStore={contactsStore}>
+					<div className={classes.root}>
+						{this.renderAddDialog()}
+						<ContactsList/>
 
-					<div className={classes.fabContainer}>
-						<Fab
-							className={classes.addFab}
-							onClick={() => this.setState({ addContactDialogOpen: true })}
-						>
-							<AddIcon/>
-						</Fab>
+						<div className={classes.fabContainer}>
+							<Fab
+								className={classes.addFab}
+								onClick={() => this.setState({ addContactDialogOpen: true })}
+							>
+								<AddIcon/>
+							</Fab>
+						</div>
 					</div>
-				</div>
-			</Provider>
+				</Provider>
+			</React.Fragment>
 		);
 	}
 }

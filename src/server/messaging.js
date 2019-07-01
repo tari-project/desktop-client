@@ -25,7 +25,7 @@ const init = (win, logger) => {
 	ipcMain.on("send-message", (event, args) => {
 		const { text } = args;
 
-		logger.info(`Message received from client: ${text}`);
+		logger.info(`Send message: ${text}`);
 
 		//TODO implement actual sending here
 		setTimeout(() => {
@@ -41,7 +41,7 @@ const init = (win, logger) => {
 
 	//Test for receiving dummy messages every 10s
 	setInterval(() => {
-		receiveRandomTestMessage(win, logger);
+		//receiveRandomTestMessage(win, logger);
 	}, 10000);
 };
 

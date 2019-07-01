@@ -6,6 +6,7 @@ const electronLog = require("electron-log");
 const url = require("url");
 
 const messaging = require("./server/messaging");
+const localStorage = require("./server/storage/index");
 
 //TODO move constants into a config.js
 const isDev = process.env.ELECTRON_ENV === "development"; //FIXME this isn't setting true for development
@@ -76,11 +77,11 @@ function createWindow() {
 
 	win.loadURL(
 		process.env.ELECTRON_START_URL ||
-			url.format({
-				pathname: path.join(__dirname, "/../public/index.html"),
-				protocol: "file:",
-				slashes: true
-			})
+      url.format({
+      	pathname: path.join(__dirname, "/../public/index.html"),
+      	protocol: "file:",
+      	slashes: true
+      })
 	);
 }
 
@@ -93,6 +94,7 @@ app.on("ready", () => {
 
 	//Listening for requests from the frontend
 	messaging.init(win, logger);
+	localStorage.init(win,logger);
 });
 
 // Quit when all windows are closed.

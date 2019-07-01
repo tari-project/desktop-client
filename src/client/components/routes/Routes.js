@@ -12,6 +12,7 @@ import NotFound from "../common/NotFound";
 
 //import HomeView from "../views/home/Index";
 import MessagesView from "../views/messages/Index";
+import ContactsView from "../views/contacts/Index";
 import DebugView from "../views/debug/Index";
 
 class Routes extends Component {
@@ -30,6 +31,7 @@ class Routes extends Component {
 							component={() => <Redirect to="/messages"/>}
 						/>
 						<Route exact path="/messages" component={MessagesView}/>
+						<Route exact path="/contacts" component={ContactsView}/>
 
 						<Route exact path="/debug" component={DebugView}/>
 						<Route component={NotFound}/>

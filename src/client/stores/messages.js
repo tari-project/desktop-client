@@ -10,7 +10,6 @@ class Messages {
   messages = null;
 
   constructor() {
-  	console.log("Listening for new messages");
   	this.refreshMessages();
 
   	ipcRenderer.on("message-response", (event, { result, error }) => {
@@ -80,10 +79,9 @@ class Messages {
   	} else {
   		this.messages.push(messageObj);
 
-  		console.log(messageObj);
-
   		if (!messageObj.isMe) {
-  			new Notification(messageObj.from, { body: messageObj.text });
+  			//TODO switch back on when it stops being annoying
+  			//new Notification(messageObj.from, { body: messageObj.text });
   		}
   	}
   }

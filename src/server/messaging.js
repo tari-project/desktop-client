@@ -14,22 +14,22 @@ const init = (win, logger) => {
 	ipcMain.on("send-message", (event, args) => {
 		const { text, pub_key } = args;
 
-		const textMessage = { dest_pub_key: pub_key, message: text }; //TODO
-		console.log("Send: ", textMessage);
+		client.SendTextMessage(
+			{ dest_pub_key: pub_key, message: text },
+			(error, result) => {
+				event.sender.send("message-response", {
+					result,
+					error
+				});
 
-		client.SendTextMessage(textMessage, (error, result) => {
-			event.sender.send("message-response", {
-				result,
-				error
-			});
-
-			if (!error && result.success) {
-				logger.info(`Sent new message:`);
-				logger.info(result);
-			} else {
-				logger.error(error || result.message);
+				if (!error && result.success) {
+					logger.info(`Sent new message:`);
+					logger.info(result);
+				} else {
+					logger.error(error || result);
+				}
 			}
-		});
+		);
 
 		logger.info(`Sent message "${text}" to pub_key "${pub_key}"`);
 	});
@@ -37,7 +37,7 @@ const init = (win, logger) => {
 	//Polling messages
 	setInterval(() => {
 		client.GetTextMessages({}, (error, result) => {
-			if (!error && result.success) {
+			if (!error && result) {
 				const { received_messages } = result;
 				if (received_messages) {
 					//Just log new when new messages arrive
@@ -62,7 +62,7 @@ const init = (win, logger) => {
 					});
 				}
 			} else {
-				logger.error(error || result.message);
+				logger.error(error || result);
 			}
 		});
 	}, 1000);

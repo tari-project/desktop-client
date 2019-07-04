@@ -110,7 +110,7 @@ app.on("window-all-closed", () => {
 });
 
 app.on("quit", () => {
-	console.log("KILL processes.");
+	logger.info("KILL processes.");
 	tariServerProcess && tariServerProcess.kill("SIGINT");
 });
 

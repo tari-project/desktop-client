@@ -15,7 +15,7 @@ const getContactByPubKey = pub_key => {
 
 const syncContacts = (win, logger) => {
 	client.GetContacts({}, (error, result) => {
-		if (!error && result.success) {
+		if (!error && result) {
 			const { contacts } = result;
 			if (contacts) {
 				//Add an ID to each contact for routing references
@@ -32,7 +32,7 @@ const syncContacts = (win, logger) => {
 				win.webContents.send("contacts-updated", { result: contacts });
 			}
 		} else {
-			logger.error(error || result.message);
+			logger.error(error || result);
 		}
 	});
 };
@@ -41,13 +41,12 @@ const init = (win, logger) => {
 	//Listening for messages from the frontend
 	ipcMain.on("save-contact", (event, contactObj) => {
 		client.AddContact(contactObj, (error, result) => {
-			console.log(result);
 			if (!error && result.success) {
 				logger.info(result);
 				logger.info(`Contact: ${JSON.stringify(contactObj)}`);
 				syncContacts(win, logger);
 			} else {
-				logger.error(error || result.message);
+				logger.error(error || result);
 			}
 		});
 	});

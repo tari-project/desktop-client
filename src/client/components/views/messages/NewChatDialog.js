@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
 import { Link } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -15,16 +14,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import PropTypes from "prop-types";
 
 import { inject, observer } from "mobx-react";
+import Avatar from "../../common/Avatar";
 
 const styles = theme => {
 	return {
 		root: {
 			minWidth: 300
-		},
-		avatar: {
-			width: 30,
-			height: 30,
-			backgroundColor: "#00838F"
 		}
 	};
 };
@@ -40,21 +35,16 @@ class NewChatDialog extends Component {
 				<DialogContent className={classes.root}>
 					<List>
 						{contacts ? (
-							contacts.map(({ screen_name, id }) => {
-								const initials =
-                  screen_name && screen_name.length > 0 ? screen_name[0] : "?";
-
-								return (
-									<Link to={`/messages/${id}`} key={id}>
-										<ListItem button onClick={onClose}>
-											<ListItemAvatar>
-												<Avatar className={classes.avatar}>{initials}</Avatar>
-											</ListItemAvatar>
-											<ListItemText primary={screen_name}/>
-										</ListItem>
-									</Link>
-								);
-							})
+							contacts.map(({ screen_name, id }) => (
+								<Link to={`/messages/${id}`} key={id}>
+									<ListItem button onClick={onClose}>
+										<ListItemAvatar>
+											<Avatar>{screen_name}</Avatar>
+										</ListItemAvatar>
+										<ListItemText primary={screen_name}/>
+									</ListItem>
+								</Link>
+							))
 						) : (
 							<Typography>Loading contacts...</Typography>
 						)}

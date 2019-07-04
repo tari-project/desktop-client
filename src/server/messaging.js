@@ -1,12 +1,36 @@
 const { ipcMain } = require("electron");
 const client = require("./api/client")();
 const { getContactByPubKey } = require("./contacts");
+const pubKeyToUserID = require("./helpers/pubKeyToUserID");
 
 let currentReceivedCount = 0;
+const currentConversations = [];
 
 //Rendering client recieves these messages
-const receiveMessage = (win, logger, result) => {
+const receiveMessage = (win, result) => {
 	win.webContents.send("message-receive", { result });
+};
+
+const updateConversations = (win, screen_name, messageObj) => {
+	const conversation = {
+		screen_name,
+		last_message: messageObj.message,
+		id: pubKeyToUserID(messageObj.source_pub_key)
+	};
+
+	const existingIndex = currentConversations
+		.map(c => c.id)
+		.indexOf(conversation.id);
+
+	if (existingIndex > -1) {
+		currentConversations[existingIndex] = conversation;
+	} else {
+		currentConversations.push(conversation);
+	}
+
+	win.webContents.send("conversations_updated", {
+		result: currentConversations
+	});
 };
 
 const init = (win, logger) => {
@@ -48,24 +72,24 @@ const init = (win, logger) => {
 						currentReceivedCount = received_messages.length;
 					}
 
-					received_messages.forEach(m => {
-						const contact = getContactByPubKey(m.source_pub_key);
-						const from = contact ? contact.screen_name : "?";
+					received_messages.forEach(messageObj => {
+						const contact = getContactByPubKey(messageObj.source_pub_key);
+						const screen_name = contact ? contact.screen_name : "?";
 
-						const result = {
-							id: m.id,
-							from,
-							text: m.message
-						};
-
-						receiveMessage(win, logger, result);
+						receiveMessage(win, {
+							id: messageObj.id,
+							screen_name,
+							text: messageObj.message,
+							conversation_id: pubKeyToUserID(messageObj.source_pub_key)
+						});
+						updateConversations(win, screen_name, messageObj);
 					});
 				}
 			} else {
 				logger.error(error || result);
 			}
 		});
-	}, 1000);
+	}, 400);
 };
 
 module.exports.init = init;

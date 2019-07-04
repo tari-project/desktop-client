@@ -1,6 +1,6 @@
 const { ipcMain } = require("electron");
 const client = require("./api/client")();
-const crypto = require("crypto");
+const pubKeyToUserID = require("./helpers/pubKeyToUserID");
 
 let currentContacts = [];
 
@@ -20,10 +20,7 @@ const syncContacts = (win, logger) => {
 			if (contacts) {
 				//Add an ID to each contact for routing references
 				contacts.forEach(c => {
-					c.id = crypto
-						.createHash("sha256")
-						.update(c.pub_key)
-						.digest("hex");
+					c.id = pubKeyToUserID(c.pub_key);
 				});
 
 				currentContacts = contacts;

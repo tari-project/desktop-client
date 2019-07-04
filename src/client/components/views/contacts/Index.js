@@ -24,7 +24,8 @@ const styles = theme => {
 		},
 		fabContainer: {
 			display: "flex",
-			justifyContent: "flex-end"
+			justifyContent: "flex-end",
+			paddingBottom: 25
 		},
 		addFab: {
 			color: theme.palette.common.white,

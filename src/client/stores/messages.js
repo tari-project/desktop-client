@@ -1,4 +1,4 @@
-import { observable, action, decorate } from "mobx";
+import { observable, action, computed, decorate } from "mobx";
 import contactsStore from "./contacts";
 const { ipcRenderer } = window.require("electron");
 
@@ -33,12 +33,9 @@ class Messages {
   	});
   }
 
-  startChat(id) {
-  	if (this.id !== id) {
-  		this.messages = [];
-  	}
-
+  setCurrentUser(id) {
   	this.id = id;
+  	this.currentContact = null;
 
   	const { contacts } = contactsStore;
   	if (contacts) {
@@ -46,6 +43,9 @@ class Messages {
   		if (currentContact) {
   			this.currentContact = currentContact;
   		}
+  	} else {
+  		//Contacts not loaded yet, check again
+  		setTimeout(() => this.setCurrentUser(id), 500);
   	}
   }
 
@@ -57,13 +57,28 @@ class Messages {
   	this.appendToMessages({
   		id: Math.floor(Math.random() * 99999),
   		text,
-  		from: "Me",
-  		isMe: true
+  		screen_name: "Me",
+  		isMe: true,
+  		conversation_id: this.currentContact.id
   	});
 
   	const pub_key = this.currentContact ? this.currentContact.pub_key : "";
 
   	ipcRenderer.send("send-message", { text, pub_key });
+  }
+
+  get currentMessages() {
+  	const messages = [];
+
+  	if (this.messages) {
+  		this.messages.forEach(m => {
+  			if (this.currentContact && this.currentContact.id === m.conversation_id) {
+  				messages.push(m);
+  			}
+  		});
+  	}
+
+  	return messages;
   }
 
   appendToMessages(messageObj) {
@@ -90,7 +105,8 @@ class Messages {
 decorate(Messages, {
 	messages: observable,
 	appendToMessages: action,
-	startChat: action
+	setCurrentUser: action,
+	currentMessages: computed
 });
 
 const messagesStore = new Messages();

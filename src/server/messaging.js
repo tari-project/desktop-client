@@ -1,48 +1,71 @@
 const { ipcMain } = require("electron");
+const client = require("./api/client")();
+const { getContactByPubKey } = require("./contacts");
+
+let currentReceivedCount = 0;
 
 //Rendering client recieves these messages
 const receiveMessage = (win, logger, result) => {
-	logger.info(`Message received: ${result.text}`);
 	win.webContents.send("message-receive", { result });
-};
-
-//TODO Remove this and uninstall lorem-ipsum after testing
-//npm uninstall --save-dev lorem-ipsum
-const receiveRandomTestMessage = (win, logger) => {
-	const loremIpsum = require("lorem-ipsum").loremIpsum;
-
-	const result = {
-		id: Math.floor(Math.random() * 99999),
-		from: "Server Steve",
-		text: loremIpsum()
-	};
-
-	receiveMessage(win, logger, result);
 };
 
 const init = (win, logger) => {
 	//Listening for messages from the frontend
 	ipcMain.on("send-message", (event, args) => {
-		const { text, pubKey } = args;
+		const { text, pub_key } = args;
 
-		logger.info(`Send message "${text}" to pubKey "${pubKey}"`);
+		const textMessage = { dest_pub_key: pub_key, message: text }; //TODO
+		console.log("Send: ", textMessage);
 
-		//TODO implement actual sending here
-		setTimeout(() => {
-			//Test response to the message just sent
+		client.SendTextMessage(textMessage, (error, result) => {
 			event.sender.send("message-response", {
-				result: true,
-				error: null
+				result,
+				error
 			});
 
-			receiveRandomTestMessage(win, logger);
-		}, 500);
+			if (!error && result.success) {
+				logger.info(`Sent new message:`);
+				logger.info(result);
+			} else {
+				logger.error(error || result.message);
+			}
+		});
+
+		logger.info(`Sent message "${text}" to pub_key "${pub_key}"`);
 	});
 
-	//Test for receiving dummy messages every 10s
+	//Polling messages
 	setInterval(() => {
-		//receiveRandomTestMessage(win, logger);
-	}, 10000);
+		client.GetTextMessages({}, (error, result) => {
+			if (!error && result.success) {
+				const { received_messages } = result;
+				if (received_messages) {
+					//Just log new when new messages arrive
+					if (currentReceivedCount < received_messages.length) {
+						logger.info(
+							`Synced ${received_messages.length} received messages.`
+						);
+						currentReceivedCount = received_messages.length;
+					}
+
+					received_messages.forEach(m => {
+						const contact = getContactByPubKey(m.source_pub_key);
+						const from = contact ? contact.screen_name : "?";
+
+						const result = {
+							id: m.id,
+							from,
+							text: m.message
+						};
+
+						receiveMessage(win, logger, result);
+					});
+				}
+			} else {
+				logger.error(error || result.message);
+			}
+		});
+	}, 1000);
 };
 
 module.exports.init = init;

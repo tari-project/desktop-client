@@ -35,16 +35,16 @@ class ContactsList extends Component {
 
 		return (
 			<List dense className={classes.list}>
-				{contacts.map(({ screenName, id }) => {
+				{contacts.map(({ screen_name, id }) => {
 					const initials =
-            screenName && screenName.length > 0 ? screenName[0] : "?";
+            screen_name && screen_name.length > 0 ? screen_name[0] : "?";
 
 					return (
-						<ListItem key={id} button>
+						<ListItem key={screen_name} button>
 							<ListItemAvatar>
 								<Avatar className={classes.avatar}>{initials}</Avatar>
 							</ListItemAvatar>
-							<ListItemText primary={screenName}/>
+							<ListItemText primary={screen_name}/>
 							<ListItemSecondaryAction>
 								<Link to={`/messages/${id}`}>
 									<IconButton edge="end" aria-label="Start chat">

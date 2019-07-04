@@ -34,7 +34,7 @@ class ChatList extends Component {
 
 		return (
 			<div className={classes.root}>
-        TODO list open chats (Click the add button)
+        		TODO list open chats (Click the add button)
 			</div>
 		);
 	}

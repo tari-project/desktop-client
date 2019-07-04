@@ -13,7 +13,8 @@ const styles = theme => {
 	return {
 		root: {
 			display: "flex",
-			height: "100%"
+			height: "100%",
+			paddingTop: 20
 		},
 		messagesContainer: {
 			height: "100%",
@@ -35,7 +36,7 @@ class ChatView extends Component {
 		super(props);
 
 		this.state = {
-			screenName: ""
+			screen_name: ""
 		};
 	}
 
@@ -43,11 +44,11 @@ class ChatView extends Component {
 		const id = this.props.match.params.id;
 
 		//TODO move this logic to a mobx store
-		const screenName = contactsStore.contacts
-			? contactsStore.contacts.find(c => c.id === id).screenName
+		const screen_name = contactsStore.contacts
+			? contactsStore.contacts.find(c => c.id === id).screen_name
 			: "Loading...";
 
-		this.setState({ screenName });
+		this.setState({ screen_name });
 
 		messagesStore.startChat(id);
 	}
@@ -58,14 +59,14 @@ class ChatView extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { screenName } = this.state;
+		const { screen_name } = this.state;
 
 		return (
 			<React.Fragment>
 				<BreadCrumbs
 					crumbs={[
 						{ to: "/messages", label: "Messages" },
-						{ label: screenName }
+						{ label: screen_name }
 					]}
 				/>
 				<Provider messagesStore={messagesStore}>

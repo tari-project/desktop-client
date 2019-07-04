@@ -30,8 +30,6 @@ class Messages {
   			return;
   		}
 
-  		new Notification(result.from, { body: result.text });
-
   		this.appendToMessages(result);
   	});
   }
@@ -64,9 +62,9 @@ class Messages {
   		isMe: true
   	});
 
-  	const pubKey = this.currentContact ? this.currentContact.pubKey : "";
+  	const pub_key = this.currentContact ? this.currentContact.pub_key : "";
 
-  	ipcRenderer.send("send-message", { text, pubKey });
+  	ipcRenderer.send("send-message", { text, pub_key });
   }
 
   appendToMessages(messageObj) {
@@ -74,7 +72,20 @@ class Messages {
   		this.messages = [];
   	}
 
-  	this.messages.push(messageObj);
+  	//Update if ID exists
+  	const existingIndex = this.messages.map(m => m.id).indexOf(messageObj.id);
+
+  	if (existingIndex > -1) {
+  		this.messages[existingIndex] = messageObj;
+  	} else {
+  		this.messages.push(messageObj);
+
+  		console.log(messageObj);
+
+  		if (!messageObj.isMe) {
+  			new Notification(messageObj.from, { body: messageObj.text });
+  		}
+  	}
   }
 }
 

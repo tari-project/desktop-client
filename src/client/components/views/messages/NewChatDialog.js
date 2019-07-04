@@ -40,9 +40,9 @@ class NewChatDialog extends Component {
 				<DialogContent className={classes.root}>
 					<List>
 						{contacts ? (
-							contacts.map(({ id, screenName }) => {
+							contacts.map(({ screen_name, id }) => {
 								const initials =
-                  screenName && screenName.length > 0 ? screenName[0] : "?";
+                  screen_name && screen_name.length > 0 ? screen_name[0] : "?";
 
 								return (
 									<Link to={`/messages/${id}`} key={id}>
@@ -50,7 +50,7 @@ class NewChatDialog extends Component {
 											<ListItemAvatar>
 												<Avatar className={classes.avatar}>{initials}</Avatar>
 											</ListItemAvatar>
-											<ListItemText primary={screenName}/>
+											<ListItemText primary={screen_name}/>
 										</ListItem>
 									</Link>
 								);

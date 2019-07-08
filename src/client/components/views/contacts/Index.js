@@ -24,7 +24,8 @@ const styles = theme => {
 		},
 		fabContainer: {
 			display: "flex",
-			justifyContent: "flex-end"
+			justifyContent: "flex-end",
+			paddingBottom: 25
 		},
 		addFab: {
 			color: theme.palette.common.white,
@@ -38,8 +39,9 @@ class ContactsView extends Component {
 		super(props);
 
 		this.state = {
-			screenName: "",
-			pubKey: "",
+			screen_name: "",
+			pub_key: "",
+			address: "",
 			addContactDialogOpen: false
 		};
 
@@ -52,17 +54,17 @@ class ContactsView extends Component {
 	}
 
 	saveContact() {
-		const { screenName, pubKey } = this.state;
+		const { screen_name, pub_key, address } = this.state;
 
-		if (!screenName || !pubKey) {
+		if (!screen_name || !pub_key || !address) {
 			return;
 		}
 
 		contactsStore.addContact(
-			{ screenName, pubKey },
+			{ screen_name, pub_key, address },
 			() => {
 				this.closeAddDialog();
-				this.setState({ screenName: "", pubKey: "" });
+				this.setState({ screen_name: "", pub_key: "", address: "" });
 			},
 			error => {
 				console.error(error); //TODO error handling
@@ -75,7 +77,7 @@ class ContactsView extends Component {
 	}
 
 	renderAddDialog() {
-		const { addContactDialogOpen, screenName, pubKey } = this.state;
+		const { addContactDialogOpen, screen_name, pub_key, address } = this.state;
 
 		return (
 			<Dialog open={addContactDialogOpen} onClose={this.closeAddDialog}>
@@ -88,21 +90,31 @@ class ContactsView extends Component {
 					<TextField
 						autoFocus
 						margin="dense"
-						id="name"
-						label="Name"
+						id="screen_name"
+						label="Screen name"
 						type="text"
 						fullWidth
-						value={screenName}
-						onChange={e => this.setState({ screenName: e.target.value })}
+						value={screen_name}
+						onChange={e => this.setState({ screen_name: e.target.value })}
 					/>
 					<TextField
 						margin="dense"
-						id="pubKey"
-						label="Pub key"
+						id="pub_key"
+						label="Public key"
 						type="text"
 						fullWidth
-						value={pubKey}
-						onChange={e => this.setState({ pubKey: e.target.value })}
+						value={pub_key}
+						onChange={e => this.setState({ pub_key: e.target.value })}
+					/>
+					<TextField
+						margin="dense"
+						id="address"
+						label="Address"
+						type="text"
+						placeholder={"127.0.0.1:20000"}
+						fullWidth
+						value={address}
+						onChange={e => this.setState({ address: e.target.value })}
 					/>
 				</DialogContent>
 				<DialogActions>

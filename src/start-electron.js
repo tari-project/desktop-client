@@ -6,7 +6,7 @@ const electronLog = require("electron-log");
 const url = require("url");
 
 const messaging = require("./server/messaging");
-const localStorage = require("./server/storage/index");
+const contacts = require("./server/contacts");
 
 //TODO move constants into a config.js
 const isDev = process.env.ELECTRON_ENV === "development"; //FIXME this isn't setting true for development
@@ -34,14 +34,19 @@ const sendLog = log => {
 	}
 };
 
+const parseLogMessage = msg =>
+	typeof msg === "object" ? JSON.stringify(msg) : msg;
+
 const logger = {
 	info: msg => {
-		electronLog.info(msg);
-		sendLog(msg);
+		const parsedMsg = parseLogMessage(msg);
+		electronLog.info(parsedMsg);
+		sendLog(parsedMsg);
 	},
 	error: msg => {
-		electronLog.error(msg);
-		sendLog(`ERROR: ${msg}`);
+		const parsedMsg = parseLogMessage(msg);
+		electronLog.error(parsedMsg);
+		sendLog(`ERROR: ${parsedMsg}`);
 	}
 };
 
@@ -94,7 +99,7 @@ app.on("ready", () => {
 
 	//Listening for requests from the frontend
 	messaging.init(win, logger);
-	localStorage.init(win,logger);
+	contacts.init(win, logger);
 });
 
 // Quit when all windows are closed.
@@ -105,7 +110,7 @@ app.on("window-all-closed", () => {
 });
 
 app.on("quit", () => {
-	console.log("KILL processes.");
+	logger.info("KILL processes.");
 	tariServerProcess && tariServerProcess.kill("SIGINT");
 });
 

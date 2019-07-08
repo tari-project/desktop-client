@@ -5,9 +5,9 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 
 import BreadCrumbs from "../../common/BreadCrumbs";
-import ChatList from "./ChatList";
+import ChatList from "./ConversationList";
 import NewChatDialog from "./NewChatDialog";
-import messagesStore from "../../../stores/messages";
+import conversationsStore from "../../../stores/conversations";
 import contactsStore from "../../../stores/contacts";
 
 const styles = theme => {
@@ -20,7 +20,8 @@ const styles = theme => {
 		},
 		fabContainer: {
 			display: "flex",
-			justifyContent: "flex-end"
+			justifyContent: "flex-end",
+			paddingBottom: 25
 		},
 		addFab: {
 			color: theme.palette.common.white,
@@ -29,7 +30,7 @@ const styles = theme => {
 	};
 };
 
-class MessagesList extends Component {
+class Conversations extends Component {
 	constructor(props) {
 		super(props);
 
@@ -50,7 +51,10 @@ class MessagesList extends Component {
 			<React.Fragment>
 				<BreadCrumbs crumbs={[{ label: "Messages" }]}/>
 
-				<Provider messagesStore={messagesStore} contactsStore={contactsStore}>
+				<Provider
+					conversationsStore={conversationsStore}
+					contactsStore={contactsStore}
+				>
 					<div className={classes.root}>
 						<NewChatDialog
 							open={newChatDialogOpen}
@@ -72,4 +76,4 @@ class MessagesList extends Component {
 	}
 }
 
-export default withStyles(styles)(MessagesList);
+export default withStyles(styles)(Conversations);

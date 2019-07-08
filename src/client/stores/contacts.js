@@ -18,15 +18,20 @@ class Contacts {
   	});
   }
 
-  addContact({ screenName, pubKey }, onSuccess = () => {}, onError = () => {}) {
-  	if (!screenName || !pubKey) {
+  addContact(
+  	{ screen_name, pub_key, address },
+  	onSuccess = () => {},
+  	onError = () => {}
+  ) {
+  	if (!screen_name || !pub_key || !address) {
   		onError("Missing details.");
   		return;
   	}
 
   	ipcRenderer.send("save-contact", {
-  		screenName,
-  		pubKey
+  		screen_name,
+  		pub_key,
+  		address
   	});
 
   	onSuccess();

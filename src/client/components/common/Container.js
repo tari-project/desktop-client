@@ -25,7 +25,7 @@ const styles = theme => ({
 		backgroundColor: "rgba(0,0,0,0.05)"
 	},
 	content: {
-		height: "94%",
+		height: "100%",
 		flexGrow: 1,
 		padding: 10
 	}
